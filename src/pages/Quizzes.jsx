@@ -34,7 +34,7 @@ const Quizzes = () => {
       <table className="w-full text-center">
         <thead className="border-gray-100 border bg-gray-500">
           <tr>
-            <th>No.</th>
+            <th className="p-3">No.</th>
             <th>Name</th>
             <th>Start</th>
             <th>Delete</th>
@@ -52,8 +52,8 @@ const Quizzes = () => {
               <td onClick={() => navigate(`/quizzes/editquiz/${quiz.id}`)}>
                 {quiz.title}
               </td>
-              <td onClick={() => navigate(`/quizzes/startquiz/${quiz.id}`)}>Start the quiz</td>
-              <td className="flex justify-center">
+              <td onClick={() => navigate(`/quizzes/startquiz/${quiz.id}`)} className="hover:scale-110">Start the quiz</td>
+              <td className="flex justify-center py-3 items-center">
                 <RiDeleteBin5Line
                   size={24}
                   onClick={() => deleteQuiz(quiz.id)}

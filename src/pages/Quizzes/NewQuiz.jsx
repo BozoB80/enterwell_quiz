@@ -77,7 +77,7 @@ function NewQuiz() {
 
   return (
     <div className="w-full h-full bg-gray-800 flex flex-col items-center justify-start p-5 gap-2 text-gray-100">
-      <Link to=".." relative="path">
+      <Link to=".." relative="path" className="w-2/3 justify-start">
         &larr; <span>Natrag</span>
       </Link>
       <h1 className="text-2xl font-bold">STVORI NOVI KVIZ</h1>
