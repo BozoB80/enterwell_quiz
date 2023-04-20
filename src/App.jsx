@@ -2,7 +2,10 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import Hero from './pages/Hero'
+import Quizzes from './pages/Quizzes'
+import NewQuiz from './pages/Quizzes/NewQuiz'
+import EditQuiz from './pages/Quizzes/EditQuiz'
+import StartQuiz from './pages/Quizzes/StartQuiz'
 
 function App() {
 
@@ -11,8 +14,10 @@ function App() {
       <Routes>
         <Route path='/' element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path='/hero' element={<Hero />} />
-
+          <Route path='/quizzes' element={<Quizzes />} />
+          <Route path='/quizzes/newquiz' element={<NewQuiz />} />
+          <Route path='/quizzes/editquiz/:id' element={<EditQuiz />} />
+          <Route path='/quizzes/startquiz/:id' element={<StartQuiz />} />
         </Route>
       </Routes>      
     </BrowserRouter>
