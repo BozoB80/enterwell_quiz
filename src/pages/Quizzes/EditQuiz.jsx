@@ -1,36 +1,47 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import Button from "../../components/Button";
 
-
-const EditQuiz = () => {
-  const [quiz, setQuiz] = useState({
-    name: "",
-    questions: [{ question: "", answer: "" }],
-  });
-  const [availableQuestions, setAvailableQuestions] = useState([]);
+function EditQuiz() {
   const { id } = useParams();
-  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [questions, setQuestions] = useState([]);
+  const [availableQuestions, setAvailableQuestions] = useState([]);
 
   useEffect(() => {
+    // FETCH THE QUIZ DATA FROM THE API
     fetch(`http://quiz-maker.apidocs.enterwell.space/quizzes/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        setQuiz(data);
+        setName(data.name);
+        setQuestions(data.questions);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }, [id]);
 
+  useEffect(() => {
+    // FETCH ALL QUESTIONS FROM QUESTIONS API
+    fetch("http://quiz-maker.apidocs.enterwell.space/questions")
+      .then((response) => response.json())
+      .then((data) => {
+        setAvailableQuestions(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const data = {
-      name: quiz.name,
-      questions: quiz.questions,
+      name,
+      questions,
     };
 
+    // SUBMIT THE FORM TO QUIZ API TO UPDATE THE QUIZ
     fetch(`http://quiz-maker.apidocs.enterwell.space/quizzes/${id}`, {
       method: "PUT",
       headers: {
@@ -53,68 +64,123 @@ const EditQuiz = () => {
   };
 
   const handleAddQuestion = () => {
-    setQuiz((prevQuiz) => ({
-      ...prevQuiz,
-      questions: [...prevQuiz.questions, { question: "", answer: "" }],
-    }));
+    setQuestions((prevQuestions) => [
+      ...prevQuestions,
+      { question: "", answer: "" },
+    ]);
   };
 
   const handleRemoveQuestion = () => {
-    setQuiz((prevQuiz) => ({
-      ...prevQuiz,
-      questions: prevQuiz.questions.slice(0, -1),
-    }));
+    setQuestions((prevQuestions) => prevQuestions.slice(0, -1));
   };
 
-  const handleQuestionChange = (event, index, key) => {
-    const newQuestions = [...quiz.questions];
-    newQuestions[index][key] = event.target.value;
-    setQuiz({ ...quiz, questions: newQuestions });
+  const handleQuestionChange = (event, index, field) => {
+    const newQuestions = [...questions];
+    newQuestions[index][field] = event.target.value;
+    setQuestions(newQuestions);
   };
 
   const handleSelectQuestion = (question) => {
     const newQuestion = {
-      id: quiz.questions.length + 1,
+      id: question.id,
       question: question.question,
       answer: question.answer,
     };
-    setQuiz({
-      ...quiz,
-      questions: [...quiz.questions, newQuestion],
-    });
+    setQuestions([...questions, newQuestion]);
   };
 
   return (
-    <div className="w-full h-screen bg-gray-800 flex flex-col items-center justify-start p-5 gap-5 text-gray-100">
-      <h1 className="text-3xl font-bold">Edit Quiz</h1>
-      {quiz ? (
-        <form onSubmit={handleFormSubmit} className="w-full max-w-lg">
-          <div className="flex flex-wrap -mx-3 mb-6">
-            <div className="w-full px-3">
-              <label className="block uppercase tracking-wide text-gray-100 text-xs font-bold mb-2" htmlFor="title">
-                Title
+    <div className="w-full h-screen pt-24 bg-gray-800 flex flex-col items-center justify-start p-5 gap-2 text-gray-100">
+      <Link to="/quizzes" relative="path" className="w-full sm:w-2/3 justify-start">
+        &larr; <span>Natrag</span>
+      </Link>
+      <h1 className="text-2xl font-bold">UREDI KVIZ</h1>
+      <form className="w-full sm:w-2/3" onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block font-bold mb-2" htmlFor="name">
+            Naziv kviza
+          </label>
+          <input
+            className="w-full border border-gray-300 text-black p-2 rounded"
+            type="text"
+            id="name"
+            name="name"
+            value={name}
+            required
+            onChange={(event) => setName(event.target.value)}
+            placeholder="Naziv kviza"
+          />
+        </div>
+        <div>
+          {questions.map((question, index) => (
+            <div className="mb-4" key={index}>
+              <label
+                className="block font-bold mb-2"
+                htmlFor={`question${index}`}
+              >
+                Pitanje br. {index + 1}
               </label>
-              <input
-                className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                id="title"
-                name="title"
-                type="text"
-                placeholder="Enter quiz title"
-                value={quiz.title}
-                onChange={handleInputChange}
-                required
+              <textarea
+                className="w-full border border-gray-300 text-black p-2 rounded mb-2"
+                id={`question${index}`}
+                name={`question${index}`}
+                rows="1"
+                value={question.question}
+                onChange={(event) =>
+                  handleQuestionChange(event, index, "question")
+                }
+                placeholder="Pitanje"
+              ></textarea>
+              <textarea
+                className="w-full border border-gray-300 text-black p-2 rounded"
+                id={`answer${index}`}
+                name={`answer${index}`}
+                rows="1"
+                value={question.answer}
+                onChange={(event) =>
+                  handleQuestionChange(event, index, "answer")
+                }
+                placeholder="Odgovor"
+              ></textarea>
+              <label>
+              Lista pitanja:
+              <select
+                onChange={(event) =>
+                  handleSelectQuestion(JSON.parse(event.target.value))
+                }
+                className="text-black ml-4 rounded-sm"
+              >
+                <option value="">Izaberi pitanje</option>
+                {availableQuestions.map((question) => (
+                  <option key={question.id} value={JSON.stringify(question)}>
+                    {question.question}
+                  </option>
+                ))}
+              </select>
+            </label>
+            </div>
+          ))}
+          <div className="flex items-center justify-between">
+            <div className="flex gap-3">
+              <Button
+                label="Dodaj pitanje"
+                type="button"
+                onClick={handleAddQuestion}
+              />
+              <Button
+                label="Obriši pitanje"
+                type="button"
+                onClick={handleRemoveQuestion}
+                disabled={questions.length === 1}
               />
             </div>
+            <Button type="submit" label="Spremi promjene" className="mt-8" />
+            
           </div>
-          <div className="flex items-center justify-end">
-            <Button type="submit" label="Save Changes" />
-          </div>
-        </form>
-      ) : (
-        <p>Loading quiz data...</p>
-      )}
+        </div>
+      </form>
     </div>
   );
-};
+}
 
 export default EditQuiz;

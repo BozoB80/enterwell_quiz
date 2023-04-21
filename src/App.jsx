@@ -6,6 +6,7 @@ import Quizzes from './pages/Quizzes'
 import NewQuiz from './pages/Quizzes/NewQuiz'
 import EditQuiz from './pages/Quizzes/EditQuiz'
 import StartQuiz from './pages/Quizzes/StartQuiz'
+import StartQuiz2 from './pages/Quizzes/StartQuiz2'
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
           <Route path='/quizzes' element={<Quizzes />} />
           <Route path='/quizzes/newquiz' element={<NewQuiz />} />
           <Route path='/quizzes/editquiz/:id' element={<EditQuiz />} />
-          <Route path='/quizzes/startquiz/:id' element={<StartQuiz />} />
+          <Route path='/quizzes/startquiz/:id' element={<StartQuiz2 />} />
         </Route>
       </Routes>      
     </BrowserRouter>

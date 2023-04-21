@@ -12,14 +12,13 @@ const StartQuiz = () => {
   const quiz = quizzes.find(q => q.id === quizId);
 
   return (
-    <div className="w-full h-screen bg-gray-800 flex flex-col items-center justify-start p-5 gap-5 text-gray-100">
-      <Link to="/quizzes" relative="path" className="w-2/3 justify-start">
+    <div className="w-full h-screen bg-gray-800 flex flex-col items-center justify-start p-1 sm:px-5 sm:pt-24 gap-5 text-gray-100">
+      <Link to="/quizzes" relative="path" className="w-full sm:w-2/3 justify-start">
         &larr; <span>Natrag</span>
       </Link>
-      <h1 className="text-3xl font-bold">Započni kviz</h1>
-      <p>{quiz.title}</p>
+      <p className='text-3xl'>{quiz.title}</p>
       
-      <div className='w-full p-10 border-4'>        
+      <div className='w-full p-2 sm:p-10 border-4 rounded-md'>        
           <Carousel
             showStatus={false}
             showThumbs={false}

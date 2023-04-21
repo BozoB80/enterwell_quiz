@@ -6,7 +6,7 @@ const Button = ({ label, link, type, onClick }) => {
     <button
       type={type}
       onClick={onClick}
-      className='text-gray-100 font-light sm:font-medium text-sm sm:text-xl border-2 px-3 py-2 rounded-md hover:text-gray-500 hover:bg-gray-200 hover:scale-105 hover: transition'
+      className='text-gray-100 font-light sm:font-medium text-sm sm:text-xl border-2 px-3 py-2 rounded-md hover:text-[#cf2e2e] hover:bg-gray-200 hover:scale-105 transition'
     >
       <Link to={link}>{label}</Link>
     </button>

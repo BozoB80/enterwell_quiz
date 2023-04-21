@@ -68,16 +68,16 @@ function NewQuiz() {
 
   const handleSelectQuestion = (question) => {
     const newQuestion = {
-      id: questions.length + 1,
-      question: question.question,
-      answer: question.answer,
+      id: availableQuestions.length + 1,
+      question: availableQuestions.question,
+      answer: availableQuestions.answer,
     };
-    setQuestions([...questions, newQuestion]);
+    setQuestions([...availableQuestions, newQuestion]);
   };
 
   return (
-    <div className="w-full h-full bg-gray-800 flex flex-col items-center justify-start p-5 gap-2 text-gray-100">
-      <Link to=".." relative="path" className="w-2/3 justify-start">
+    <div className="w-full h-screen pt-24 bg-gray-800 flex flex-col items-center justify-start p-5 gap-2 text-gray-100">
+      <Link to=".." relative="path" className="w-full sm:w-2/3 justify-start">
         &larr; <span>Natrag</span>
       </Link>
       <h1 className="text-2xl font-bold">STVORI NOVI KVIZ</h1>
@@ -130,14 +130,14 @@ function NewQuiz() {
                 placeholder="Odgovor"
               ></textarea>
               <label>
-                Available Questions:
+                Lista pitanja:
                 <select
                   onChange={(event) =>
                     handleSelectQuestion(JSON.parse(event.target.value))
                   }
-                  className="text-black"
+                  className="text-black ml-4 rounded-sm"
                 >
-                  <option value="">Select a question</option>
+                  <option value="">Izaberi pitanje</option>
                   {availableQuestions.map((question) => (
                     <option key={question.id} value={JSON.stringify(question)}>
                       {question.question}

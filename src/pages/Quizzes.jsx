@@ -2,7 +2,8 @@ import React from "react";
 import Button from "../components/Button";
 import { quizzes } from "../quizzes";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { useNavigate, useParams } from "react-router-dom";
+import { MdOutlineNotStarted } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 const Quizzes = () => {
   const navigate = useNavigate();
@@ -26,39 +27,53 @@ const Quizzes = () => {
   // };
 
   return (
-    <div className="w-full h-screen bg-gray-800 flex flex-col items-center justify-start p-5 gap-5 text-gray-100">
+    <div className="w-full h-screen pt-24 bg-gray-800 flex flex-col items-center justify-start px-2 sm:px-5 gap-5 text-gray-100">
       <div className="w-full flex items-center justify-between">
-        <h1 className="text-3xl font-bold">List of all quizzes:</h1>
-        <Button link="/quizzes/newquiz" label="Create a new quiz" />
+        <h1 className="text-xl sm:text-3xl font-bold">Lista svih kvizova:</h1>
+        <Button link="/quizzes/newquiz" label="Stvori novi kviz" />
       </div>
       <table className="w-full text-center">
-        <thead className="border-gray-100 border bg-gray-500">
+        <thead className="border-gray-100 border rounded-md bg-gray-500">
           <tr>
-            <th className="p-3">No.</th>
-            <th>Name</th>
-            <th>Start</th>
-            <th>Delete</th>
+            <th className="p-3">Br.</th>
+            <th>Naziv</th>
+            <th>Pokreni kviz</th>
+            <th>Izbriši</th>
           </tr>
         </thead>
         <tbody>
           {quizzes.map((quiz) => (
             <tr
               key={quiz.id}
-              className="border-gray-100 border w-full cursor-pointer hover:text-gray-500 hover:bg-gray-200 hover:transition"
+              className="border-gray-100 border w-full cursor-pointer hover:text-gray-500 hover:bg-gray-200 transition"
             >
               <td onClick={() => navigate(`/quizzes/editquiz/${quiz.id}`)}>
                 {quiz.id}
               </td>
-              <td onClick={() => navigate(`/quizzes/editquiz/${quiz.id}`)}>
+              <td
+                onClick={() => navigate(`/quizzes/editquiz/${quiz.id}`)}
+                className="sm:w-2/3"
+              >
                 {quiz.title}
               </td>
-              <td onClick={() => navigate(`/quizzes/startquiz/${quiz.id}`)} className="hover:scale-110">Start the quiz</td>
-              <td className="flex justify-center py-3 items-center">
-                <RiDeleteBin5Line
-                  size={24}
-                  onClick={() => deleteQuiz(quiz.id)}
-                  className="hover:scale-125"
-                />
+              <td className="py-3">
+                <button
+                  type="button"
+                  onClick={() => navigate(`/quizzes/startquiz/${quiz.id}`)}
+                >
+                  <MdOutlineNotStarted
+                    size={24}
+                    className="hover:scale-125 hover:text-[#cf2e2e]"
+                  />
+                </button>
+              </td>
+              <td className="">
+                <button type="button" onClick={() => deleteQuiz(quiz.id)}>
+                  <RiDeleteBin5Line
+                    size={24}
+                    className="hover:scale-125 hover:text-[#cf2e2e]"
+                  />
+                </button>
               </td>
             </tr>
           ))}
