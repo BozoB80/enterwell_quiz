@@ -76,7 +76,7 @@ function NewQuiz() {
   };
 
   return (
-    <div className="w-full h-screen pt-24 bg-gray-800 flex flex-col items-center justify-start p-5 gap-2 text-gray-100">
+    <div className="w-full h-screen pt-24 bg-gray-800 flex flex-col items-center justify-start p-2 sm:p-5 gap-2 text-gray-100">
       <Link to=".." relative="path" className="w-full sm:w-2/3 justify-start">
         &larr; <span>Natrag</span>
       </Link>
@@ -107,7 +107,7 @@ function NewQuiz() {
               >
                 Pitanje br. {index + 1}
               </label>
-              <textarea
+              <input
                 className="w-full border border-gray-300 text-black p-2 rounded mb-2"
                 id={`question${index}`}
                 name={`question${index}`}
@@ -117,8 +117,8 @@ function NewQuiz() {
                   handleQuestionChange(event, index, "question")
                 }
                 placeholder="Pitanje"
-              ></textarea>
-              <textarea
+              />
+              <input
                 className="w-full border border-gray-300 text-black p-2 rounded"
                 id={`answer${index}`}
                 name={`answer${index}`}
@@ -128,14 +128,14 @@ function NewQuiz() {
                   handleQuestionChange(event, index, "answer")
                 }
                 placeholder="Odgovor"
-              ></textarea>
+              />
               <label>
                 Lista pitanja:
                 <select
                   onChange={(event) =>
                     handleSelectQuestion(JSON.parse(event.target.value))
                   }
-                  className="text-black ml-4 rounded-sm"
+                  className="text-black ml-4 mt-2 rounded-sm"
                 >
                   <option value="">Izaberi pitanje</option>
                   {availableQuestions.map((question) => (

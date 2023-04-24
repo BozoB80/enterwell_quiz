@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Button from "../../components/Button";
+import { quizzes } from "../../quizzes";
 
 function EditQuiz() {
   const { id } = useParams();
-  const [name, setName] = useState("");
-  const [questions, setQuestions] = useState([]);
+  const quiz = quizzes.find((item) => item.id == id);
+
+  const [name, setName] = useState(`${quiz.title}`);
+  const [questions, setQuestions] = useState([
+    ...quiz.questions,
+    {
+      question: quiz.questions.question,
+      answer: quiz.questions.answer,
+    },
+  ]);
   const [availableQuestions, setAvailableQuestions] = useState([]);
 
   useEffect(() => {
@@ -74,6 +83,14 @@ function EditQuiz() {
     setQuestions((prevQuestions) => prevQuestions.slice(0, -1));
   };
 
+  const handleRemoveSingleQuestion = (index) => {
+    setQuestions((prevQuestions) => {
+      const newQuestions = [...prevQuestions];
+      newQuestions.splice(index, 1);
+      return newQuestions;
+    });
+  };
+
   const handleQuestionChange = (event, index, field) => {
     const newQuestions = [...questions];
     newQuestions[index][field] = event.target.value;
@@ -90,8 +107,12 @@ function EditQuiz() {
   };
 
   return (
-    <div className="w-full h-screen pt-24 bg-gray-800 flex flex-col items-center justify-start p-5 gap-2 text-gray-100">
-      <Link to="/quizzes" relative="path" className="w-full sm:w-2/3 justify-start">
+    <div className="w-full h-full pt-24 bg-gray-800 flex flex-col items-center justify-start p-2 sm:p-5 gap-2 text-gray-100">
+      <Link
+        to="/quizzes"
+        relative="path"
+        className="w-full sm:w-2/3 justify-start"
+      >
         &larr; <span>Natrag</span>
       </Link>
       <h1 className="text-2xl font-bold">UREDI KVIZ</h1>
@@ -120,7 +141,7 @@ function EditQuiz() {
               >
                 Pitanje br. {index + 1}
               </label>
-              <textarea
+              <input
                 className="w-full border border-gray-300 text-black p-2 rounded mb-2"
                 id={`question${index}`}
                 name={`question${index}`}
@@ -130,8 +151,8 @@ function EditQuiz() {
                   handleQuestionChange(event, index, "question")
                 }
                 placeholder="Pitanje"
-              ></textarea>
-              <textarea
+              />
+              <input
                 className="w-full border border-gray-300 text-black p-2 rounded"
                 id={`answer${index}`}
                 name={`answer${index}`}
@@ -141,23 +162,28 @@ function EditQuiz() {
                   handleQuestionChange(event, index, "answer")
                 }
                 placeholder="Odgovor"
-              ></textarea>
+              />
               <label>
-              Lista pitanja:
-              <select
-                onChange={(event) =>
-                  handleSelectQuestion(JSON.parse(event.target.value))
-                }
-                className="text-black ml-4 rounded-sm"
-              >
-                <option value="">Izaberi pitanje</option>
-                {availableQuestions.map((question) => (
-                  <option key={question.id} value={JSON.stringify(question)}>
-                    {question.question}
-                  </option>
-                ))}
-              </select>
-            </label>
+                Lista pitanja:
+                <select
+                  onChange={(event) =>
+                    handleSelectQuestion(JSON.parse(event.target.value))
+                  }
+                  className="text-black mx-4 mt-2 rounded-sm"
+                >
+                  <option value="">Izaberi pitanje</option>
+                  {availableQuestions.map((question) => (
+                    <option key={question.id} value={JSON.stringify(question)}>
+                      {question.question}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <Button 
+                label="Izbriši"
+                type="button"
+                onClick={() => handleRemoveSingleQuestion(index)}
+              />
             </div>
           ))}
           <div className="flex items-center justify-between">
@@ -175,7 +201,6 @@ function EditQuiz() {
               />
             </div>
             <Button type="submit" label="Spremi promjene" className="mt-8" />
-            
           </div>
         </div>
       </form>
