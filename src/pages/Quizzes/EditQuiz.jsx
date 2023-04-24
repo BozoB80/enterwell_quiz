@@ -107,7 +107,7 @@ function EditQuiz() {
   };
 
   return (
-    <div className="w-full h-full pt-24 bg-gray-800 flex flex-col items-center justify-start p-2 sm:p-5 gap-2 text-gray-100">
+    <div className="w-full h-full pt-24 bg-gray-800 flex flex-col items-center justify-start px-2 sm:px-5 gap-2 text-gray-100">
       <Link
         to="/quizzes"
         relative="path"

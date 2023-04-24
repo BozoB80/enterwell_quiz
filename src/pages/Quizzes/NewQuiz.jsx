@@ -76,7 +76,7 @@ function NewQuiz() {
   };
 
   return (
-    <div className="w-full h-screen pt-24 bg-gray-800 flex flex-col items-center justify-start p-2 sm:p-5 gap-2 text-gray-100">
+    <div className="w-full h-screen pt-24 bg-gray-800 flex flex-col items-center justify-start px-2 sm:px-5 gap-2 text-gray-100">
       <Link to=".." relative="path" className="w-full sm:w-2/3 justify-start">
         &larr; <span>Natrag</span>
       </Link>
