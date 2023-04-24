@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
 import Button from "../../components/Button";
+import { quizzes } from "../../quizzes";
 
 function NewQuiz() {
   const [name, setName] = useState("");
-  const [questions, setQuestions] = useState([{ question: "", answer: "" }]);
-  const [availableQuestions, setAvailableQuestions] = useState([]);
+  const [questions, setQuestions] = useState([
+    { question: "", answer: "", selectedQuestion: "" },
+  ]);
+
+  const allQuestions = quizzes.flatMap((quiz) => quiz.questions);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -53,30 +57,35 @@ function NewQuiz() {
   // }, []);
 
   const handleAddQuestion = () => {
-    setQuestions((prevQuestions) => [...prevQuestions, ""]);
+    setQuestions((prevQuestions) => [
+      ...prevQuestions,
+      { question: "", answer: "", selectedQuestion: "" },
+    ]);
   };
 
-  const handleRemoveQuestion = () => {
-    setQuestions((prevQuestions) => prevQuestions.slice(0, -1));
+  const handleRemoveQuestion = (index) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.filter((q, i) => i !== index)
+    );
   };
 
-  const handleQuestionChange = (event, index) => {
+  const handleQuestionChange = (event, index, field) => {
     const newQuestions = [...questions];
-    newQuestions[index] = event.target.value;
+    newQuestions[index][field] = event.target.value;
     setQuestions(newQuestions);
   };
 
-  const handleSelectQuestion = (question) => {
-    const newQuestion = {
-      id: availableQuestions.length + 1,
-      question: availableQuestions.question,
-      answer: availableQuestions.answer,
-    };
-    setQuestions([...availableQuestions, newQuestion]);
+  const handleSelectChange = (e, index) => {
+    const selected = allQuestions.find((q) => q.question === e.target.value);
+    const newQuestions = [...questions];
+    newQuestions[index].selectedQuestion = e.target.value;
+    newQuestions[index].question = selected.question;
+    newQuestions[index].answer = selected.answer;
+    setQuestions(newQuestions);
   };
 
   return (
-    <div className="w-full h-screen pt-24 bg-gray-800 flex flex-col items-center justify-start px-2 sm:px-5 gap-2 text-gray-100">
+    <div className="w-full h-full pt-24 pb-64 bg-gray-800 flex flex-col items-center justify-start px-2 sm:px-5 gap-2 text-gray-100">
       <Link to=".." relative="path" className="w-full sm:w-2/3 justify-start">
         &larr; <span>Natrag</span>
       </Link>
@@ -129,22 +138,28 @@ function NewQuiz() {
                 }
                 placeholder="Odgovor"
               />
-              <label>
-                Lista pitanja:
+
+              <div className="flex flex-col sm:flex-row justify-between sm:justify-center items-start sm:items-center mt-2 w-full truncate">
+                <label className="text-sm sm:text-base">Izaberi pitanje:</label>
                 <select
-                  onChange={(event) =>
-                    handleSelectQuestion(JSON.parse(event.target.value))
-                  }
-                  className="text-black ml-4 mt-2 rounded-sm"
+                  value={question.selectedQuestion}
+                  onChange={(e) => handleSelectChange(e, index)}
+                  className="text-black sm:mx-4 my-1 sm:my-2 rounded-sm text-sm w-full sm:w-1/3 sm:text-base"
                 >
                   <option value="">Izaberi pitanje</option>
-                  {availableQuestions.map((question) => (
-                    <option key={question.id} value={JSON.stringify(question)}>
-                      {question.question}
+                  {allQuestions.map((item) => (
+                    <option key={item.id} value={item.question}>
+                      {item.question} {item.answer}
                     </option>
                   ))}
                 </select>
-              </label>
+
+                <Button
+                  label="Obriši pitanje"
+                  type="button"
+                  onClick={() => handleRemoveQuestion(index)}
+                />
+              </div>
             </div>
           ))}
           <div className="flex items-center justify-between">
@@ -153,11 +168,6 @@ function NewQuiz() {
                 label="Dodaj pitanje"
                 type="button"
                 onClick={handleAddQuestion}
-              />
-              <Button
-                label="Obriši pitanje"
-                type="button"
-                onClick={handleRemoveQuestion}
               />
             </div>
             <Button label="Stvori kviz" type="submit" />

@@ -6,6 +6,7 @@ import { quizzes } from "../../quizzes";
 function EditQuiz() {
   const { id } = useParams();
   const quiz = quizzes.find((item) => item.id == id);
+  const allQuestions = quizzes.flatMap((quiz) => quiz.questions);
 
   const [name, setName] = useState(`${quiz.title}`);
   const [questions, setQuestions] = useState([
@@ -13,34 +14,37 @@ function EditQuiz() {
     {
       question: quiz.questions.question,
       answer: quiz.questions.answer,
+      selectedQuestion: ""
     },
   ]);
   const [availableQuestions, setAvailableQuestions] = useState([]);
 
-  useEffect(() => {
-    // FETCH THE QUIZ DATA FROM THE API
-    fetch(`http://quiz-maker.apidocs.enterwell.space/quizzes/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setName(data.name);
-        setQuestions(data.questions);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, [id]);
+  
 
-  useEffect(() => {
-    // FETCH ALL QUESTIONS FROM QUESTIONS API
-    fetch("http://quiz-maker.apidocs.enterwell.space/questions")
-      .then((response) => response.json())
-      .then((data) => {
-        setAvailableQuestions(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   // FETCH THE QUIZ DATA FROM THE API
+  //   fetch(`http://quiz-maker.apidocs.enterwell.space/quizzes/${id}`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setName(data.name);
+  //       setQuestions(data.questions);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //     });
+  // }, [id]);
+
+  // useEffect(() => {
+  //   // FETCH ALL QUESTIONS FROM QUESTIONS API
+  //   fetch("http://quiz-maker.apidocs.enterwell.space/questions")
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setAvailableQuestions(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //     });
+  // }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -51,44 +55,38 @@ function EditQuiz() {
     };
 
     // SUBMIT THE FORM TO QUIZ API TO UPDATE THE QUIZ
-    fetch(`http://quiz-maker.apidocs.enterwell.space/quizzes/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Something went wrong with response");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    // fetch(`http://quiz-maker.apidocs.enterwell.space/quizzes/${id}`, {
+    //   method: "PUT",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(data),
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Something went wrong with response");
+    //     }
+    //     return response.json();
+    //   })
+    //   .then((data) => {
+    //     console.log(data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
   };
 
   const handleAddQuestion = () => {
     setQuestions((prevQuestions) => [
       ...prevQuestions,
-      { question: "", answer: "" },
+      { question: "", answer: "", selectedQuestion: "" },
     ]);
   };
 
-  const handleRemoveQuestion = () => {
-    setQuestions((prevQuestions) => prevQuestions.slice(0, -1));
-  };
-
-  const handleRemoveSingleQuestion = (index) => {
-    setQuestions((prevQuestions) => {
-      const newQuestions = [...prevQuestions];
-      newQuestions.splice(index, 1);
-      return newQuestions;
-    });
+  const handleRemoveQuestion = (index) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.filter((q, i) => i !== index)
+    );
   };
 
   const handleQuestionChange = (event, index, field) => {
@@ -97,17 +95,17 @@ function EditQuiz() {
     setQuestions(newQuestions);
   };
 
-  const handleSelectQuestion = (question) => {
-    const newQuestion = {
-      id: question.id,
-      question: question.question,
-      answer: question.answer,
-    };
-    setQuestions([...questions, newQuestion]);
+  const handleSelectChange = (e, index) => {
+    const selected = allQuestions.find((q) => q.question === e.target.value);
+    const newQuestions = [...questions];
+    newQuestions[index].selectedQuestion = e.target.value;
+    newQuestions[index].question = selected.question;
+    newQuestions[index].answer = selected.answer;
+    setQuestions(newQuestions);
   };
 
   return (
-    <div className="w-full h-full pt-24 bg-gray-800 flex flex-col items-center justify-start px-2 sm:px-5 gap-2 text-gray-100">
+    <div className="w-full h-full pt-24 pb-64 bg-gray-800 flex flex-col items-center justify-start px-2 sm:px-5 gap-2 text-gray-100">
       <Link
         to="/quizzes"
         relative="path"
@@ -163,27 +161,27 @@ function EditQuiz() {
                 }
                 placeholder="Odgovor"
               />
-              <label>
-                Lista pitanja:
+              <div className="flex flex-col sm:flex-row justify-between sm:justify-center items-start sm:items-center mt-2 w-full truncate">
+                <label className="text-sm sm:text-base">Izaberi pitanje:</label>
                 <select
-                  onChange={(event) =>
-                    handleSelectQuestion(JSON.parse(event.target.value))
-                  }
-                  className="text-black mx-4 mt-2 rounded-sm"
+                  value={question.selectedQuestion}
+                  onChange={(e) => handleSelectChange(e, index)}
+                  className="text-black sm:mx-4 my-1 sm:my-2 rounded-sm text-sm w-full sm:w-1/3 sm:text-base"
                 >
                   <option value="">Izaberi pitanje</option>
-                  {availableQuestions.map((question) => (
-                    <option key={question.id} value={JSON.stringify(question)}>
-                      {question.question}
+                  {allQuestions.map((item) => (
+                    <option key={item.id} value={item.question}>
+                      {item.question} {item.answer}
                     </option>
                   ))}
                 </select>
-              </label>
-              <Button 
-                label="Izbriši"
-                type="button"
-                onClick={() => handleRemoveSingleQuestion(index)}
-              />
+
+                <Button
+                  label="Obriši pitanje"
+                  type="button"
+                  onClick={() => handleRemoveQuestion(index)}
+                />
+              </div>
             </div>
           ))}
           <div className="flex items-center justify-between">
@@ -192,12 +190,6 @@ function EditQuiz() {
                 label="Dodaj pitanje"
                 type="button"
                 onClick={handleAddQuestion}
-              />
-              <Button
-                label="Obriši pitanje"
-                type="button"
-                onClick={handleRemoveQuestion}
-                disabled={questions.length === 1}
               />
             </div>
             <Button type="submit" label="Spremi promjene" className="mt-8" />
