@@ -48,7 +48,7 @@ const StartQuiz = () => {
   };
 
   return (
-    <div className="w-full h-screen bg-gray-800 flex flex-col items-center justify-start p-1 sm:px-5 pt-24 gap-5 text-gray-100">
+    <div className="w-full h-screen bg_gradient flex flex-col items-center justify-start p-1 sm:px-5 pt-24 gap-5 text-gray-100">
       <div className="w-full sm:w-2/3 flex justify-between items-center">
         <Link
           to="/quizzes"
@@ -59,11 +59,11 @@ const StartQuiz = () => {
         </Link>
         <div onClick={() => handleCopy()} className="flex justify-center items-center gap-2 cursor-pointer">          
           {copied ? <TiTick className="w-6 h-6 cursor-pointer" /> : <RiFileCopy2Line className="w-6 h-6 cursor-pointer" />  } 
-          <p>Copy website link</p>
+          <p className="text-sm">Copy website link</p>
         </div>
       </div>
       <p className="text-3xl">{quiz.title}</p>
-      <div className="relative w-full h-full border rounded-sm">
+      <div className="relative w-full h-96 border rounded-sm">
         <div onClick={previousSlide}>
           <BsChevronLeft
             onClick={() => setShowAnswer(false)}
@@ -83,7 +83,7 @@ const StartQuiz = () => {
             className="absolute flex justify-center items-center w-full h-full transition-all"
           >
             {index === currentSlide && (
-              <div className="flex flex-col justify-center items-center space-y-10 z-50">
+              <div className="flex flex-col justify-center items-center w-2/3 space-y-10 z-50">
                 <h1 className="text-3xl">Pitanje br. {item.id}</h1>
                 <h1 className="text-xl sm:text-3xl">{item.question}</h1>
                 <div className="flex flex-col sm:flex-row justify-center items-center gap-10">

@@ -27,13 +27,13 @@ const Quizzes = () => {
   // };
 
   return (
-    <div className="w-full h-screen pt-24 bg-gray-800 flex flex-col items-center justify-start px-2 sm:px-5 gap-5 text-gray-100">
+    <div className="w-full h-screen pt-24 bg_gradient flex flex-col items-center justify-start px-2 sm:px-5 gap-5 text-gray-100">
       <div className="w-full flex items-center justify-between">
         <h1 className="text-xl sm:text-3xl font-bold">Lista svih kvizova:</h1>
         <Button link="/quizzes/newquiz" label="Stvori novi kviz" />
       </div>
-      <table className="w-full text-center">
-        <thead className="border-gray-100 border rounded-md bg-gray-500">
+      <table className="w-full text-center border">
+        <thead className="border-gray-100 rounded-md uppercase bg-gray-500">
           <tr>
             <th className="p-3">Br.</th>
             <th>Naziv</th>

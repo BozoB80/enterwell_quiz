@@ -105,7 +105,7 @@ function EditQuiz() {
   };
 
   return (
-    <div className="w-full h-full pt-24 pb-64 bg-gray-800 flex flex-col items-center justify-start px-2 sm:px-5 gap-2 text-gray-100">
+    <div className="w-full min-h-screen pt-24 bg_gradient flex flex-col items-center justify-start px-2 sm:px-5 gap-2 text-gray-100">
       <Link
         to="/quizzes"
         relative="path"
@@ -169,8 +169,8 @@ function EditQuiz() {
                   className="text-black sm:mx-4 my-1 sm:my-2 rounded-sm text-sm w-full sm:w-1/3 sm:text-base"
                 >
                   <option value="">Izaberi pitanje</option>
-                  {allQuestions.map((item) => (
-                    <option key={item.id} value={item.question}>
+                  {allQuestions.map((item, i) => (
+                    <option key={i + 1} value={item.question}>
                       {item.question} {item.answer}
                     </option>
                   ))}
