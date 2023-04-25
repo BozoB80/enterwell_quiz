@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Button from "../../components/Button";
 import { quizzes } from "../../quizzes";
+import { motion } from "framer-motion";
+import { slideAnimation } from "../../utils/motion";
 
 function EditQuiz() {
   const { id } = useParams();
@@ -105,7 +107,7 @@ function EditQuiz() {
   };
 
   return (
-    <div className="w-full min-h-screen pt-24 bg_gradient flex flex-col items-center justify-start px-2 sm:px-5 gap-2 text-gray-100">
+    <motion.div {...slideAnimation('down')} className="w-full min-h-screen pt-24 bg_gradient flex flex-col items-center justify-start px-2 sm:px-5 gap-2 text-gray-100">
       <Link
         to="/quizzes"
         relative="path"
@@ -196,7 +198,7 @@ function EditQuiz() {
           </div>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 }
 

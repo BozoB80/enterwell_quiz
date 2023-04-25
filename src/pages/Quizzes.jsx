@@ -4,6 +4,9 @@ import { quizzes } from "../quizzes";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { MdOutlineNotStarted } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { headContentAnimation } from "../utils/motion";
+import { slideAnimation } from "../utils/motion";
 
 const Quizzes = () => {
   const navigate = useNavigate();
@@ -29,10 +32,10 @@ const Quizzes = () => {
   return (
     <div className="w-full h-screen pt-24 bg_gradient flex flex-col items-center justify-start px-2 sm:px-5 gap-5 text-gray-100">
       <div className="w-full flex items-center justify-between">
-        <h1 className="text-xl sm:text-3xl font-bold">Lista svih kvizova:</h1>
-        <Button link="/quizzes/newquiz" label="Stvori novi kviz" />
+        <motion.h1 {...slideAnimation('left')} className="text-xl sm:text-3xl font-bold">Lista svih kvizova:</motion.h1>
+        <motion.div {...slideAnimation('right')}><Button link="/quizzes/newquiz" label="Stvori novi kviz" /></motion.div>
       </div>
-      <table className="w-full text-center border">
+      <motion.table {...headContentAnimation} className="w-full text-center border">
         <thead className="border-gray-100 rounded-md uppercase bg-gray-500">
           <tr>
             <th className="p-3">Br.</th>
@@ -78,7 +81,7 @@ const Quizzes = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </motion.table>
     </div>
   );
 };
